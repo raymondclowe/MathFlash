@@ -1,0 +1,15 @@
+# PDF parsing and processing
+PyMuPDF>=1.23.0
+pdfplumber>=0.10.0
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
+# Text processing
+openai>=1.0.0
+
+# CLI interface
+click>=8.1.0
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
