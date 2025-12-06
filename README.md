@@ -68,11 +68,15 @@ export SECRET_KEY="your-secret-key"
 ### Start the Flask Server
 
 ```bash
-# Development mode
+# Development mode (with debug enabled)
+export FLASK_DEBUG=true
+python src/mathflash/web_app.py
+
+# Or using Flask CLI
 cd src/mathflash
 python -m flask --app web_app run --debug
 
-# Or using Python directly
+# Production mode (debug disabled by default)
 python src/mathflash/web_app.py
 ```
 

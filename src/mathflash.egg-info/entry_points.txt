@@ -1,2 +1,0 @@
-[console_scripts]
-mathflash = mathflash.web_app:app.run
