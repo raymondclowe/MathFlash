@@ -7,6 +7,10 @@ from typing import Optional
 
 from .exercise_extractor import Exercise
 
+# Default model for OpenRouter - Gemini 2.0 Flash
+DEFAULT_MODEL = "google/gemini-2.0-flash-001"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
 
 @dataclass
 class AIExercise(Exercise):
@@ -68,29 +72,32 @@ Respond with JSON:
 
 JSON Response:"""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-3.5-turbo"):
+    def __init__(self, api_key: Optional[str] = None, model: str = DEFAULT_MODEL):
         """
         Initialize the AI processor.
         
         Args:
-            api_key: OpenAI API key. If not provided, will try to get from environment.
-            model: The OpenAI model to use.
+            api_key: OpenRouter API key. If not provided, will try to get from environment.
+            model: The model to use via OpenRouter (default: google/gemini-2.0-flash-001).
         """
         self.api_key = api_key
         self.model = model
         self._client = None
     
     def _get_client(self):
-        """Get or create the OpenAI client."""
+        """Get or create the OpenRouter client (OpenAI-compatible)."""
         if self._client is None:
             import os
             from openai import OpenAI
             
-            api_key = self.api_key or os.environ.get("OPENAI_API_KEY")
+            api_key = self.api_key or os.environ.get("OPENROUTER_API_KEY")
             if not api_key:
-                raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable or pass api_key parameter.")
+                raise ValueError("OpenRouter API key not provided. Set OPENROUTER_API_KEY environment variable or pass api_key parameter.")
             
-            self._client = OpenAI(api_key=api_key)
+            self._client = OpenAI(
+                api_key=api_key,
+                base_url=OPENROUTER_BASE_URL
+            )
         return self._client
     
     def extract_exercises_from_page(self, page_content: str, page_number: int = 0) -> list[AIExercise]:

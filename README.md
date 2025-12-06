@@ -20,7 +20,7 @@ MathFlash transforms your PDF textbooks into interactive learning experiences. U
 
 - Python 3.9 or higher
 - Tesseract OCR (optional, for image-based PDFs)
-- OpenAI API key (optional, for AI-powered extraction and blanking)
+- OpenRouter API key (optional, for AI-powered extraction and blanking - uses Gemini 2.0 Flash by default)
 
 ### Install from Source
 
@@ -53,8 +53,8 @@ brew install tesseract
 Set the following environment variables:
 
 ```bash
-# Required for AI-powered features
-export OPENAI_API_KEY="your-openai-api-key"
+# Required for AI-powered features (OpenRouter API)
+export OPENROUTER_API_KEY="your-openrouter-api-key"
 
 # Optional: Custom upload folder
 export UPLOAD_FOLDER="/path/to/uploads"
@@ -62,6 +62,15 @@ export UPLOAD_FOLDER="/path/to/uploads"
 # Optional: Production secret key
 export SECRET_KEY="your-secret-key"
 ```
+
+### Getting an OpenRouter API Key
+
+1. Go to [OpenRouter](https://openrouter.ai/)
+2. Sign up for an account
+3. Generate an API key from the dashboard
+4. Set it as the `OPENROUTER_API_KEY` environment variable
+
+The default model is **Gemini 2.0 Flash** (`google/gemini-2.0-flash-001`), which provides excellent performance for exercise extraction and intelligent blanking.
 
 ## Running the Application
 

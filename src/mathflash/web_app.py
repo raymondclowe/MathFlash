@@ -29,7 +29,7 @@ def create_app(config: Optional[dict] = None) -> Flask:
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     app.config['UPLOAD_FOLDER'] = os.environ.get('UPLOAD_FOLDER', '/tmp/mathflash_uploads')
     app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
-    app.config['OPENAI_API_KEY'] = os.environ.get('OPENAI_API_KEY', '')
+    app.config['OPENROUTER_API_KEY'] = os.environ.get('OPENROUTER_API_KEY', '')
     
     if config:
         app.config.update(config)
@@ -75,7 +75,7 @@ def create_app(config: Optional[dict] = None) -> Flask:
             pages_content = [page.text for page in document.pages]
             
             # Process with AI
-            api_key = app.config.get('OPENAI_API_KEY')
+            api_key = app.config.get('OPENROUTER_API_KEY')
             if api_key:
                 processor = AIExerciseProcessor(api_key=api_key)
                 exercises = processor.process_document(pages_content)
@@ -292,7 +292,7 @@ def create_app(config: Optional[dict] = None) -> Flask:
         
         exercise = exercises[exercise_id]
         
-        api_key = app.config.get('OPENAI_API_KEY')
+        api_key = app.config.get('OPENROUTER_API_KEY')
         if not api_key:
             return jsonify({'error': 'AI processing not available (no API key)'}), 400
         
