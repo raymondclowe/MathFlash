@@ -18,7 +18,7 @@ dependencies = [
     "pytesseract>=0.3.10",
     "Pillow>=10.0.0",
     "openai>=1.0.0",
-    "click>=8.1.0",
+    "Flask>=3.0.0",
 ]
 
 [project.optional-dependencies]
@@ -28,7 +28,7 @@ dev = [
 ]
 
 [project.scripts]
-mathflash = "mathflash.cli:main"
+mathflash = "mathflash.web_app:app.run"
 
 [tool.setuptools.packages.find]
 where = ["src"]

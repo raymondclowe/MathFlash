@@ -207,22 +207,31 @@ class ExerciseExtractor:
                 if len(match) >= 2:
                     q_num = re.sub(r'[^\d]', '', str(match[0]))
                     q_text = str(match[1]).strip()
-                    if q_num and q_text:
+                    if q_num and q_text and len(q_text) > 10:
                         questions[q_num] = q_text
         
         # Also try line-by-line extraction for numbered items
-        lines = text.split('\n')
+        # Split by "Answers" or "Solutions" section to avoid capturing answers as questions
+        text_parts = re.split(r'(?i)\n\s*(?:answers?|solutions?)\s*:?\s*\n', text)
+        question_text = text_parts[0] if text_parts else text
+        
+        lines = question_text.split('\n')
         current_num = None
         current_text = []
         
         for line in lines:
+            # Skip if this looks like an answer section header
+            if re.match(r'(?i)^\s*(?:answers?|solutions?)\s*:?\s*$', line):
+                break
+            
             # Check if line starts with a number
             line_match = re.match(r'^\s*(\d+)[\.\)\s]+(.+)', line)
             if line_match:
                 # Save previous question
                 if current_num and current_text:
-                    if current_num not in questions:
-                        questions[current_num] = ' '.join(current_text)
+                    combined = ' '.join(current_text)
+                    if current_num not in questions and len(combined) > 10:
+                        questions[current_num] = combined
                 
                 current_num = line_match.group(1)
                 current_text = [line_match.group(2).strip()]
@@ -231,8 +240,9 @@ class ExerciseExtractor:
         
         # Save last question
         if current_num and current_text:
-            if current_num not in questions:
-                questions[current_num] = ' '.join(current_text)
+            combined = ' '.join(current_text)
+            if current_num not in questions and len(combined) > 10:
+                questions[current_num] = combined
         
         return questions
     
@@ -248,6 +258,17 @@ class ExerciseExtractor:
                     a_text = str(match[1]).strip()
                     if a_num and a_text:
                         answers[a_num] = a_text
+        
+        # Also try to extract from "Answers:" section
+        answer_section_match = re.search(r'(?i)(?:answers?|solutions?)\s*:?\s*\n([\s\S]*?)(?=\n\n|\Z)', text)
+        if answer_section_match:
+            answer_section = answer_section_match.group(1)
+            # Look for numbered answers in this section
+            numbered_answers = re.findall(r'(\d+)[\.\)]\s*(.+?)(?=\d+[\.\)]|\Z)', answer_section, re.DOTALL)
+            for a_num, a_text in numbered_answers:
+                a_text = a_text.strip()
+                if a_num and a_text and a_num not in answers:
+                    answers[a_num] = a_text
         
         return answers
     
