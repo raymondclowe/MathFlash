@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mathflash"
+version = "0.1.0"
+description = "Automated math flash card question training from PDF textbooks"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "MathFlash Team"}
+]
+dependencies = [
+    "PyMuPDF>=1.23.0",
+    "pdfplumber>=0.10.0",
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0.0",
+    "openai>=1.0.0",
+    "Flask>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.scripts]
+mathflash = "mathflash.web_app:app.run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
